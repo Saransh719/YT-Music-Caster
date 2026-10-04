@@ -8,10 +8,12 @@ import { send } from "./websocket.js";
 
 async function sendToTab(tabId, command, payload = {}) {
   try {
-    return await chrome.tabs.sendMessage(tabId, {
+    const tabMessage = {
       command,
       ...payload
-    });
+    };
+    const response = await chrome.tabs.sendMessage(tabId, tabMessage);
+    return response;
   } catch (error) {
     console.error(
       `[YT Caster] Failed to send ${command} to tab ${tabId}:`,
@@ -59,10 +61,6 @@ export async function handleMessage(message) {
 }
 
 async function handlePlay(message) {
-  console.log(
-    `[YT Caster] PLAY ${message.videoId} @ ${message.position}s`
-  );
-
   const tab = await getOrCreateYouTubeMusicTab(
     message.videoId
   );
@@ -73,6 +71,7 @@ async function handlePlay(message) {
     tab.id,
     "play",
     {
+      videoId: message.videoId,
       position: message.position ?? 0
     }
   );

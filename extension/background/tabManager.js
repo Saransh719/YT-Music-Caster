@@ -16,7 +16,6 @@ export async function getOrCreateYouTubeMusicTab(videoId) {
   const existingTab = await findYouTubeMusicTab();
 
   const url = buildVideoUrl(videoId);
-
   if (existingTab) {
     console.log(
       `[YT Caster] Using existing YT Music tab: ${existingTab.id}`

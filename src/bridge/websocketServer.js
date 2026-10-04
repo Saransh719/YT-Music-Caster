@@ -30,7 +30,9 @@ export function startWebSocketServer() {
       try {
         const message = JSON.parse(data.toString());
 
-        console.log("🌐 Extension → Node:", message);
+        if (message.type !== "player_state") {
+          console.log("🌐 Extension → Node:", message);
+        }
 
         handleMessage(message);
       } catch (error) {
@@ -69,13 +71,8 @@ export function sendToExtension(type, payload = {}) {
 
     pendingRequests.set(requestId, resolve);
 
-    extensionSocket.send(
-      JSON.stringify({
-        type,
-        requestId,
-        ...payload
-      })
-    );
+    const message = { type, requestId, ...payload };
+    extensionSocket.send(JSON.stringify(message));
 
     setTimeout(() => {
       if (pendingRequests.has(requestId)) {
@@ -105,21 +102,16 @@ function handleMessage(message) {
   }
 
   if (message.type === "player_state") {
-  console.log(
-    "🎵 PC player state:",
-    message.state
-  );
-
-  if (playerStateHandler) {
-    Promise.resolve(
-      playerStateHandler(message.state)
-    ).catch((error) => {
-      console.error(
-        "❌ Failed to handle player state:",
-        error
-      );
-    });
+    if (playerStateHandler) {
+      Promise.resolve(
+        playerStateHandler(message.state)
+      ).catch((error) => {
+        console.error(
+          "❌ Failed to handle player state:",
+          error
+        );
+      });
+    }
+    return;
   }
-  return;
-}
 }
