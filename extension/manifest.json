@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "YT Music Caster",
+  "version": "0.1.0",
+  "description": "YouTube Music Cast receiver bridge",
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://music.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background/serviceWorker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://music.youtube.com/*"
+      ],
+      "js": [
+        "content/contentScript.js"
+      ]
+
+    }
+  ]
+}

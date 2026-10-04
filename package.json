@@ -1,0 +1,16 @@
+{
+  "name": "yt-music-caster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.22.0",
+    "yt-cast-receiver": "^2.1.0"
+  }
+}
