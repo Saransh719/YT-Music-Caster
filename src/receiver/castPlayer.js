@@ -231,13 +231,10 @@ export class CastPlayer extends Player {
       this.pendingPhoneVideoTimer = null;
     }
 
-    // Update our local media reference without mutating the Cast queue.
-    // The Cast queue should only be changed by actual Cast/YouTube Music
-    // queue operations.
-    const video = this.buildVideoFromState(state);
-    if (video) {
-      this.currentVideo = video;
-    }
+    // Update the queue before emitting the state event. YouTubeApp compares
+    // queue.current in successive player states to decide whether to send
+    // NowPlaying to the sender.
+    this.syncCurrentMediaItem(state);
     
     if (state.playing) {
       this.currentPlaying = true;
