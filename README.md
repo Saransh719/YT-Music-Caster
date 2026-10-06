@@ -20,6 +20,14 @@ The project is inspired by the seamless device-control experience of Spotify Con
 - Connect using the existing YouTube Music Cast functionality
 - Automatic communication between the Cast receiver and browser extension
 
+<p align="center">
+  <img width="200px" alt="popup" src="https://github.com/user-attachments/assets/b5a973ab-2803-4dd2-a68f-5c2d9b277cca" />
+  <img width="200px" alt="phone" src="https://github.com/user-attachments/assets/200d0418-6af2-4469-9dd6-e27943a4d616" />
+
+</p>
+  
+
+
 ---
 
 # Installation
