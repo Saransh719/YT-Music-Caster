@@ -8,6 +8,52 @@ import { handleMessage } from "./messageHandler.js";
 
 setMessageHandler(handleMessage);
 
+const NATIVE_HOST_NAME = "com.ytmusiccaster.host";
+
+let nativePort = null;
+
+function connectNativeHost() {
+  try {
+    nativePort = chrome.runtime.connectNative(
+      NATIVE_HOST_NAME
+    );
+
+    nativePort.onMessage.addListener((message) => {
+      console.log(
+        "[YT Caster] Native host:",
+        message
+      );
+    });
+
+    nativePort.onDisconnect.addListener(() => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "[YT Caster] Native host disconnected:",
+          chrome.runtime.lastError.message
+        );
+      }
+
+      nativePort = null;
+    });
+
+    nativePort.postMessage({
+      type: "start"
+    });
+
+    console.log(
+      "[YT Caster] Native host connected"
+    );
+
+  } catch (error) {
+    console.error(
+      "[YT Caster] Native host connection failed:",
+      error
+    );
+  }
+}
+
+connectNativeHost();
+
 connectWebSocket();
 
 console.log("[YT Caster] Service worker started");

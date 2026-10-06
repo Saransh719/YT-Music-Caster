@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "description": "YouTube Music Cast receiver bridge",
   "permissions": [
-    "tabs"
+    "tabs",
+    "nativeMessaging"
   ],
   "host_permissions": [
     "https://music.youtube.com/*"
