@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YT Music Caster</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header class="header">
+        <div class="brand-mark" aria-hidden="true">♫</div>
+        <div><p class="eyebrow">YT MUSIC CASTER</p><h1>Your devices</h1></div>
+        <span id="connection" class="connection"><i></i><span>Connecting</span></span>
+      </header>
+
+      <section class="device-card" aria-live="polite">
+        <div class="device-icon" aria-hidden="true">▣</div>
+        <div class="device-copy"><p class="eyebrow">CURRENT DEVICE</p><h2 id="device-name">Checking connection…</h2><p id="device-status">Looking for your receiver</p></div>
+        <button id="remove" class="icon-button" type="button" aria-label="Remove current device" title="Remove current device" hidden>×</button>
+      </section>
+
+      <section id="pairing" class="pairing" hidden aria-live="polite">
+        <p class="eyebrow">PAIR A NEW DEVICE</p>
+        <p id="pairing-message">Your code is ready. Enter it in the YouTube app.</p>
+        <div id="code" class="code" hidden></div>
+      </section>
+
+      <button id="pair" class="primary-button" type="button"><span aria-hidden="true"></span> Pair new device</button>
+      <p id="feedback" class="feedback" role="status"></p>
+      <footer>Pair with YouTube on your phone or TV</footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

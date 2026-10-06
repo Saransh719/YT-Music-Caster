@@ -6,6 +6,17 @@ import {
 
 import { send } from "./websocket.js";
 
+let latestPairingCode = null;
+let latestDeviceState = { devices: [] };
+
+export function getLatestPairingCode() {
+  return latestPairingCode;
+}
+
+export function getLatestDeviceState() {
+  return latestDeviceState;
+}
+
 async function sendToTab(tabId, command, payload = {}) {
   try {
     const tabMessage = {
@@ -29,6 +40,24 @@ async function sendToTab(tabId, command, payload = {}) {
 
 export async function handleMessage(message) {
   switch (message.type) {
+    case "pairing_code":
+      latestPairingCode = message.code;
+      chrome.runtime.sendMessage(message).catch(() => {});
+      send({
+        type: "ack",
+        requestId: message.requestId,
+        ok: true
+      });
+      break;
+
+    case "device_state":
+      latestDeviceState = { devices: message.devices ?? [] };
+      chrome.runtime.sendMessage({
+        type: "device_state",
+        ...latestDeviceState
+      }).catch(() => {});
+      break;
+
     case "play":
       await handlePlay(message);
       break;

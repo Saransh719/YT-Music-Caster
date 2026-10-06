@@ -4,7 +4,11 @@ import {
   send
 } from "./websocket.js";
 
-import { handleMessage } from "./messageHandler.js";
+import {
+  getLatestPairingCode,
+  getLatestDeviceState,
+  handleMessage
+} from "./messageHandler.js";
 
 setMessageHandler(handleMessage);
 
@@ -75,7 +79,15 @@ chrome.runtime.onInstalled.addListener(initialize);
 initialize();
 
 
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.type === "get_pairing_code") {
+    sendResponse({
+      code: getLatestPairingCode(),
+      deviceState: getLatestDeviceState()
+    });
+    return true;
+  }
+
   if (message.type === "player_state") {
     send({
       type: "player_state",

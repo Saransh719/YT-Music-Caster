@@ -5,6 +5,7 @@ const PORT = 8765;
 
 let extensionSocket = null;
 let playerStateHandler = null;
+let latestDeviceState = { devices: [] };
 
 export function setPlayerStateHandler(handler) {
   playerStateHandler = handler;
@@ -83,9 +84,23 @@ export function sendToExtension(type, payload = {}) {
   });
 }
 
+export function broadcastToExtension(type, payload = {}) {
+  if (type === "device_state") {
+    latestDeviceState = payload;
+  }
+
+  if (!extensionSocket || extensionSocket.readyState !== 1) {
+    return false;
+  }
+
+  extensionSocket.send(JSON.stringify({ type, ...payload }));
+  return true;
+}
+
 function handleMessage(message) {
   if (message.type === "extension_ready") {
     console.log("✅ Chrome extension is ready");
+    broadcastToExtension("device_state", latestDeviceState);
     return;
   }
 

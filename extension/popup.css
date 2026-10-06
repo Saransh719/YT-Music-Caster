@@ -1,0 +1,27 @@
+* { box-sizing: border-box; }
+body { width: 360px; margin: 0; color: #202124; background: #f7f8fa; font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.panel { padding: 22px; }
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; color: white; background: #e62117; font-size: 25px; }
+.eyebrow { margin: 0; color: #777d86; font-size: 10px; font-weight: 700; letter-spacing: .11em; }
+h1 { margin: 2px 0 0; font-size: 19px; letter-spacing: -.02em; }
+.connection { display: flex; align-items: center; gap: 6px; margin-left: auto; color: #70757a; font-size: 11px; }
+.connection i { width: 7px; height: 7px; border-radius: 50%; background: #f9ab00; }
+.connection.online i { background: #188038; }
+.device-card { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid #e6e8eb; border-radius: 14px; background: #fff; }
+.device-icon { display: grid; flex: 0 0 40px; height: 40px; place-items: center; border-radius: 12px; color: #5f6368; background: #f0f2f5; font-size: 21px; }
+.device-copy { min-width: 0; flex: 1; }
+.device-copy h2 { overflow: hidden; margin: 3px 0 0; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.device-copy > p:last-child { margin: 2px 0 0; color: #777d86; font-size: 12px; }
+.icon-button { width: 30px; height: 30px; border: 0; border-radius: 9px; color: #70757a; background: transparent; cursor: pointer; font-size: 22px; }
+.icon-button:hover { color: #b3261e; background: #fce8e6; }
+.pairing { margin-top: 14px; padding: 15px; border: 1px solid #d9e2f2; border-radius: 14px; background: #f2f6fc; }
+.pairing > p:nth-child(2) { margin: 6px 0 0; color: #5f6368; font-size: 12px; }
+.code { margin-top: 10px; color: #202124; font-size: 27px; font-weight: 700; letter-spacing: .2em; text-align: center; }
+.primary-button { display: flex; width: 100%; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; padding: 12px; border: 0; border-radius: 11px; color: #fff; background: #202124; cursor: pointer; font: inherit; font-weight: 650; }
+.primary-button:hover { background: #383a3d; }
+.primary-button:disabled { cursor: wait; opacity: .65; }
+.primary-button span { font-size: 18px; line-height: 1; }
+.feedback { min-height: 17px; margin: 8px 2px 0; color: #b3261e; font-size: 11px; }
+footer { padding-top: 4px; color: #8a9099; font-size: 11px; text-align: center; }
+[hidden] { display: none !important; }
