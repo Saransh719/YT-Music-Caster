@@ -86,10 +86,32 @@ async function switchToVideo(videoId, position = 0) {
     `[YT Caster] Navigating to: ${videoId}`
   );
 
-  const targetUrl =
-    `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+  const app = document.querySelector("ytmusic-app");
 
-  window.location.href = targetUrl;
+  if (!app) {
+    throw new Error("YouTube Music app router not found");
+  }
+
+  // yt-navigate is YouTube Music's internal navigation event. Let the app
+  // fetch track data and update its existing player without reloading the page.
+  const watchUrl = `/watch?v=${encodeURIComponent(videoId)}`;
+  app.dispatchEvent(
+    new CustomEvent("yt-navigate", {
+      bubbles: true,
+      composed: true,
+      detail: {
+        endpoint: {
+          commandMetadata: {
+            webCommandMetadata: {
+              url: watchUrl,
+              webPageType: "WEB_PAGE_TYPE_WATCH"
+            }
+          },
+          watchEndpoint: { videoId }
+        }
+      }
+    })
+  );
 
   const start = Date.now();
   const timeout = 15000;
@@ -146,13 +168,20 @@ async function handleCommand(message) {
         message
       );
 
-      video = await waitForVideo();
+      if (message.videoId) {
+        video = await switchToVideo(
+          message.videoId,
+          message.position ?? 0
+        );
+      } else {
+        video = await waitForVideo();
 
-      if (message.position != null) {
-        video.currentTime = message.position;
+        if (message.position != null) {
+          video.currentTime = message.position;
+        }
+
+        await video.play();
       }
-
-      await video.play();
 
       return {
         state: getPlayerState()

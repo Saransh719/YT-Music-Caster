@@ -61,11 +61,14 @@ export async function handleMessage(message) {
 }
 
 async function handlePlay(message) {
+  const existingTab = await findYouTubeMusicTab();
   const tab = await getOrCreateYouTubeMusicTab(
     message.videoId
   );
 
-  await waitForTabLoaded(tab.id);
+  if (!existingTab) {
+    await waitForTabLoaded(tab.id);
+  }
 
   const result = await sendToTab(
     tab.id,

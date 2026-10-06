@@ -15,17 +15,13 @@ export async function findYouTubeMusicTab() {
 export async function getOrCreateYouTubeMusicTab(videoId) {
   const existingTab = await findYouTubeMusicTab();
 
-  const url = buildVideoUrl(videoId);
   if (existingTab) {
     console.log(
       `[YT Caster] Using existing YT Music tab: ${existingTab.id}`
     );
 
-    await chrome.tabs.update(existingTab.id, {
-      active: true,
-      url
-    });
-
+    // Keep the loaded app alive and in the background. The content script asks
+    // YouTube Music's own router to switch tracks without stealing focus.
     return existingTab;
   }
 
@@ -34,7 +30,7 @@ export async function getOrCreateYouTubeMusicTab(videoId) {
   );
 
   return await chrome.tabs.create({
-    url,
+    url: buildVideoUrl(videoId),
     active: true
   });
 }
