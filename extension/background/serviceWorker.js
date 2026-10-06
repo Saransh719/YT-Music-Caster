@@ -52,11 +52,27 @@ function connectNativeHost() {
   }
 }
 
-connectNativeHost();
+// Chrome starts the MV3 service worker on demand. These lifecycle events
+// explicitly initialize the connection after browser startup and install/update.
+let initialized = false;
 
-connectWebSocket();
+function initialize() {
+  if (initialized) {
+    return;
+  }
 
-console.log("[YT Caster] Service worker started");
+  initialized = true;
+  connectNativeHost();
+  connectWebSocket();
+  console.log("[YT Caster] Service worker initialized");
+}
+
+chrome.runtime.onStartup.addListener(initialize);
+chrome.runtime.onInstalled.addListener(initialize);
+
+// Also initialize when Chrome starts this worker for another event, such as
+// an incoming message, or when the extension is first loaded.
+initialize();
 
 
 chrome.runtime.onMessage.addListener((message) => {
