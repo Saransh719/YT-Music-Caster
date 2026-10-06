@@ -13,17 +13,6 @@ const indexPath = path.join(projectRoot, "index.js");
 let serverProcess = null;
 let started = false;
 
-/*
- * Native Messaging stdout is RESERVED.
- *
- * Chrome expects stdout to contain ONLY:
- *
- *   [4-byte message length][JSON message]
- *
- * Therefore the child Node application must NEVER inherit
- * this process's stdout.
- */
-
 function send(message) {
   const json = JSON.stringify(message);
   const payload = Buffer.from(json, "utf8");
@@ -36,7 +25,7 @@ function send(message) {
     process.stdout.write(payload);
   } catch (error) {
     console.error(
-      "[YT Caster Host] Failed to send message:",
+      "[YT Caster Host] Failed to send:",
       error
     );
   }
@@ -47,6 +36,12 @@ function startServer() {
     console.error(
       "[YT Caster Host] Server already running"
     );
+
+    send({
+      type: "started",
+      ok: true
+    });
+
     return;
   }
 
@@ -59,17 +54,6 @@ function startServer() {
     [indexPath],
     {
       cwd: projectRoot,
-
-      /*
-       * IMPORTANT:
-       *
-       * stdin  -> ignored
-       * stdout -> pipe
-       * stderr -> pipe
-       *
-       * Never use "inherit" for stdout because stdout
-       * belongs to Chrome Native Messaging.
-       */
       stdio: [
         "ignore",
         "pipe",
@@ -79,29 +63,25 @@ function startServer() {
   );
 
   /*
-   * Forward application's stdout to OUR stderr.
-   *
-   * This keeps application logs visible without corrupting
-   * Chrome's Native Messaging protocol.
+   * NEVER allow the application stdout to reach
+   * Native Messaging stdout.
    */
   serverProcess.stdout.on("data", (data) => {
     process.stderr.write(data);
   });
 
-  /*
-   * Forward application's stderr to our stderr as well.
-   */
   serverProcess.stderr.on("data", (data) => {
     process.stderr.write(data);
   });
 
   serverProcess.on("error", (error) => {
     console.error(
-      "[YT Caster Host] Failed to start server:",
+      "[YT Caster Host] Server failed:",
       error
     );
 
     serverProcess = null;
+    started = false;
 
     send({
       type: "error",
@@ -121,19 +101,13 @@ function startServer() {
 
   started = true;
 
-  /*
-   * The child process has been successfully spawned.
-   *
-   * We don't wait for index.js to finish because index.js
-   * starts the long-running WebSocket/Cast services.
-   */
   send({
     type: "started",
     ok: true
   });
 
   console.error(
-    "[YT Caster Host] YT Music Caster process started"
+    "[YT Caster Host] YT Music Caster started"
   );
 }
 
@@ -187,14 +161,7 @@ process.stdin.on("data", (chunk) => {
       );
 
       if (message.type === "start") {
-        if (!started) {
-          startServer();
-        } else {
-          send({
-            type: "started",
-            ok: true
-          });
-        }
+        startServer();
       }
 
       if (message.type === "stop") {
