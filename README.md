@@ -215,7 +215,7 @@ The manifest must be placed in the appropriate Chrome Native Messaging host dire
 Clone the repository:
 
 ```bash
-git clone <REPOSITORY_URL>
+git clone https://github.com/Saransh719/YT-Music-Caster.git
 cd YT-Music-Caster
 ```
 
